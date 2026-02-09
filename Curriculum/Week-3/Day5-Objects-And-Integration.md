@@ -170,7 +170,7 @@ console.log(people[0].name);  // "Alice"
 
 ### 6. Nested Objects
 
-Objects can contain other objects:
+Objects can contain other objects. This is called **nesting** — when one data structure is placed inside another.
 
 ```javascript
 const company = {
@@ -191,6 +191,136 @@ console.log(company.name);                    // "TechCorp"
 console.log(company.address.city);            // "New York"
 console.log(company.employees[0].name);       // "Alice"
 ```
+
+---
+
+### 7. Object Mutability
+
+**Mutability** means the ability to be changed after creation. In JavaScript, understanding mutability is critical because objects and arrays behave very differently from primitive values (numbers, strings, booleans).
+
+#### Primitives are Immutable
+
+**Primitive values** (numbers, strings, booleans, `null`, `undefined`) are **immutable** — they cannot be changed. When you "modify" a primitive, you are actually creating a new value and reassigning the variable.
+
+```javascript
+let name = "Alice";
+name = "Bob";  // Not modifying "Alice" — creating a new string "Bob"
+
+// Strings are immutable — you cannot change individual characters
+let str = "hello";
+str[0] = "H";          // ❌ Silently fails
+console.log(str);      // "hello" — unchanged
+```
+
+#### Objects are Mutable
+
+**Objects** (including arrays) are **mutable** — their contents can be changed after creation. More importantly, **object variables store references** (memory addresses), not the actual data.
+
+```javascript
+const person = { name: "Alice", age: 25 };
+person.age = 26;         // ✅ Modifying the object's contents
+person.email = "a@b.com"; // ✅ Adding a new property
+console.log(person);     // { name: "Alice", age: 26, email: "a@b.com" }
+
+// Notice: we used `const` but still changed the object!
+// `const` prevents reassigning the variable, NOT modifying the object's contents.
+```
+
+#### Reference vs Value: Identity
+
+When you assign an object to another variable, both variables **point to the same object** in memory. This is called a **reference**:
+
+```javascript
+const a = { value: 10 };
+const b = a;            // b is NOT a copy — it's a reference to the same object
+
+b.value = 20;
+console.log(a.value);   // 20  — a was also affected!
+
+// Because a and b point to the SAME object:
+console.log(a === b);   // true  — same identity
+```
+
+**Comparison:**
+
+```javascript
+// Objects: identity comparison (are they the same object?)
+const obj1 = { x: 1 };
+const obj2 = { x: 1 };
+console.log(obj1 === obj2);  // false — different objects, even with same content!
+
+// Primitives: value comparison
+const num1 = 42;
+const num2 = 42;
+console.log(num1 === num2);  // true — same value
+```
+
+#### Shallow Copy
+
+To create an independent copy of an object (so changes to one don't affect the other), you need to make a **shallow copy**. A **shallow copy** copies the top-level properties but does not clone nested objects — those still share references.
+
+```javascript
+const original = { name: "Alice", age: 25, hobbies: ["reading"] };
+
+// Method 1: Spread operator
+const copy1 = { ...original };
+
+// Method 2: Object.assign()
+const copy2 = Object.assign({}, original);
+
+copy1.name = "Bob";
+console.log(original.name);  // "Alice"  — original unchanged ✅
+
+// ⚠️ WARNING: Nested objects are still shared!
+copy1.hobbies.push("coding");
+console.log(original.hobbies);  // ["reading", "coding"] — also changed! ❌
+```
+
+> **Deep copy** (copying nested objects too) can be done with `JSON.parse(JSON.stringify(obj))` for simple objects, or `structuredClone(obj)` in modern JavaScript.
+
+---
+
+### 8. Computing Correlation
+
+A practical application of arrays and objects together is **computing correlation** — measuring how strongly two things are related. This example comes from the textbook *Eloquent JavaScript* (Chapter 4).
+
+**Scenario:** Jacques keeps a daily journal recording events (what he ate, whether he exercised, etc.) and whether he turned into a squirrel that day. He wants to find which events correlate with his transformation.
+
+#### Phi Coefficient (φ)
+
+The **phi coefficient** is a measure of correlation between two Boolean (true/false) variables. It ranges from $-1$ (perfectly inversely related) to $1$ (perfectly directly related), with $0$ meaning no relation.
+
+The formula uses a **2×2 frequency table**:
+
+|                 | No Squirrel | Squirrel |
+|-----------------|-------------|----------|
+| **No Event**    | $n_{00}$    | $n_{01}$ |
+| **Event**       | $n_{10}$    | $n_{11}$ |
+
+$$\phi = \frac{n_{11} \cdot n_{00} - n_{10} \cdot n_{01}}{\sqrt{(n_{10}+n_{11})(n_{00}+n_{01})(n_{01}+n_{11})(n_{00}+n_{10})}}$$
+
+```javascript
+// Computing phi coefficient from a frequency table
+// table = [n00, n01, n10, n11]
+function phi(table) {
+    return (table[3] * table[0] - table[2] * table[1]) /
+        Math.sqrt(
+            (table[2] + table[3]) *
+            (table[0] + table[1]) *
+            (table[1] + table[3]) *
+            (table[0] + table[2])
+        );
+}
+
+// Example: Does eating pizza correlate with squirrel transformation?
+// 76 days: no pizza, no squirrel
+// 9 days: no pizza, yes squirrel
+// 4 days: yes pizza, no squirrel
+// 1 day: yes pizza, yes squirrel
+console.log(phi([76, 9, 4, 1]));  // 0.069 — very weak correlation
+```
+
+This example shows how arrays (the frequency table), objects (journal entries), and loops (processing entries) work together to solve a real problem.
 
 ---
 

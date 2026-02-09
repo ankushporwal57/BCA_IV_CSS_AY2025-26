@@ -8,6 +8,25 @@
 
 ## 📚 THEORY SESSION (90 minutes)
 
+### 0. Understanding Data Sets
+
+Before diving into arrays, let's understand the concept of a **data set**. A **data set** is any structured collection of related data — it could be a list of student names, a table of product prices, a sequence of temperature readings, or survey responses.
+
+In real-world programming, you almost always work with **collections of data** rather than individual values. Consider these scenarios:
+
+- A teacher has marks for 60 students — storing each in a separate variable (`mark1`, `mark2`, ..., `mark60`) would be impractical
+- An e-commerce site has thousands of products — each with a name, price, and description
+- A weather app stores temperature readings for every hour of every day
+
+To work with such data sets efficiently, programming languages provide **data structures** — special formats for organizing, storing, and accessing data. In JavaScript, the two fundamental data structures for working with data sets are:
+
+1. **Arrays** — ordered collections accessed by numeric index (position)
+2. **Objects** — collections of named properties (key-value pairs)
+
+This day focuses on **arrays** — the most common way to represent ordered data sets in JavaScript.
+
+---
+
 ### 1. What is an Array?
 
 An **array** is an ordered list of values. It's like a container with numbered slots.
@@ -149,6 +168,107 @@ const trueCopy = [...original]; // ✅ Real copy (new array)
 const arr1 = [1, 2];
 const arr2 = [3, 4];
 const combined = [...arr1, ...arr2];  // [1, 2, 3, 4]
+```
+
+---
+
+### 7. Further Arrayology
+
+Beyond the basic methods, JavaScript arrays have many more powerful methods. The term **"further arrayology"** (from the textbook *Eloquent JavaScript*) refers to this rich set of tools for working with arrays.
+
+#### slice() — Extract a Portion
+
+The `slice()` method returns a **new array** containing a portion of the original. It takes a start index and an optional end index (exclusive). It does **not** modify the original array.
+
+```javascript
+const letters = ["a", "b", "c", "d", "e"];
+
+console.log(letters.slice(1, 3));   // ["b", "c"]  (index 1 up to but not including 3)
+console.log(letters.slice(2));      // ["c", "d", "e"]  (from index 2 to end)
+console.log(letters.slice());       // ["a", "b", "c", "d", "e"]  (full copy)
+console.log(letters.slice(-2));     // ["d", "e"]  (last 2 elements)
+```
+
+> **slice vs splice:** `slice()` creates a new array without changing the original. `splice()` **modifies** the original array by removing or inserting elements. They sound similar but behave very differently!
+
+#### concat() — Merge Arrays
+
+The `concat()` method merges two or more arrays into a **new array** without modifying the originals:
+
+```javascript
+const first = [1, 2];
+const second = [3, 4];
+const third = [5, 6];
+
+const all = first.concat(second, third);
+console.log(all);    // [1, 2, 3, 4, 5, 6]
+console.log(first);  // [1, 2]  — original unchanged
+
+// You can also concat individual values
+const extended = first.concat(10, 20);
+console.log(extended);  // [1, 2, 10, 20]
+```
+
+#### find() and findIndex() — Search for Elements
+
+`find()` returns the **first element** that matches a condition. `findIndex()` returns the **index** of that element. Both stop searching after the first match.
+
+```javascript
+const students = [
+    { name: "Alice", score: 85 },
+    { name: "Bob", score: 92 },
+    { name: "Charlie", score: 78 }
+];
+
+// find() — returns the element itself
+const topStudent = students.find(s => s.score > 90);
+console.log(topStudent);  // { name: "Bob", score: 92 }
+
+// findIndex() — returns the index
+const topIndex = students.findIndex(s => s.score > 90);
+console.log(topIndex);  // 1
+
+// If no match is found:
+const failing = students.find(s => s.score < 50);
+console.log(failing);  // undefined
+
+const failIndex = students.findIndex(s => s.score < 50);
+console.log(failIndex);  // -1
+```
+
+#### some() and every() — Test Conditions
+
+`some()` returns `true` if **at least one** element passes the test. `every()` returns `true` only if **all** elements pass.
+
+```javascript
+const ages = [16, 21, 18, 14, 25];
+
+// some() — "Are there ANY adults?"
+const hasAdult = ages.some(age => age >= 18);
+console.log(hasAdult);  // true
+
+// every() — "Are ALL adults?"
+const allAdults = ages.every(age => age >= 18);
+console.log(allAdults);  // false
+
+// Practical: Validate that all fields are filled
+const formData = ["Alice", "alice@email.com", "Mumbai"];
+const allFilled = formData.every(field => field.length > 0);
+console.log(allFilled);  // true
+```
+
+#### flat() and flatMap() — Flatten Nested Arrays
+
+`flat()` creates a new array with sub-array elements **flattened** (merged into the parent array) to a specified depth:
+
+```javascript
+const nested = [[1, 2], [3, 4], [5, 6]];
+console.log(nested.flat());  // [1, 2, 3, 4, 5, 6]
+
+const deepNested = [1, [2, [3, [4]]]];
+console.log(deepNested.flat(1));     // [1, 2, [3, [4]]]
+console.log(deepNested.flat(2));     // [1, 2, 3, [4]]
+console.log(deepNested.flat(Infinity)); // [1, 2, 3, 4]
 ```
 
 ---
@@ -461,6 +581,13 @@ Find highest score, calculate class average
 | indexOf() | Find position | `arr.indexOf(5)` |
 | includes() | Check exists | `arr.includes(5)` |
 | join() | Convert to string | `arr.join(", ")` |
+| slice() | Extract portion (new array) | `arr.slice(1, 3)` |
+| concat() | Merge arrays (new array) | `arr1.concat(arr2)` |
+| find() | First matching element | `arr.find(x => x > 5)` |
+| findIndex() | Index of first match | `arr.findIndex(x => x > 5)` |
+| some() | Any element passes test? | `arr.some(x => x > 5)` |
+| every() | All elements pass test? | `arr.every(x => x > 5)` |
+| flat() | Flatten nested arrays | `nested.flat()` |
 
 ---
 
