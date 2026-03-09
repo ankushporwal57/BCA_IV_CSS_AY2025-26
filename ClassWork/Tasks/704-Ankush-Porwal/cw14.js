@@ -25,11 +25,4 @@ return(newstr);
  console.log("string: 'this is string'");
  console.log(capitalizeallwords('this is a string'));
 
- // method 2.3.2: same usng arrow function...
- console.log("method 2.3.2: capitalize all the words using arrow functions");
- const capallwords = str => {
-    str.split(" ").map(word => word[0].toUpperCase() + word.slice(1)).join(" ");
-    const strtocap = "i am studying in bca sem iv";
-    console.log("string: ",strtocap);
-    console.log(capitalizeallwords(capallwords(strtocap)));
- }
+ 
